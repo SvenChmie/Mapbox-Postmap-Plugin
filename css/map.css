@@ -19,11 +19,14 @@
   width: 28px;
   background-size: contain;
   background-image: url(../images/post_marker_round_gray.png);
-  -webkit-transition: -webkit-transform .2s ease-in-out;
+  -webkit-transition: -webkit-transform .2s ease-in-out;  /* Chrome < 26, Safari < 7 */
+  transition: -webkit-transform .2s ease-in-out;          /* Chrome 26-35, Safari, Opera 15-23 */
+  transition: transform .2s ease-in-out;                  /* IE10+, Firefox 16+, Chrome 36+, Opera 12.10 */
 }
 
 .marker-inner:hover {
   -webkit-transform: scale(1.4);
+  transform: scale(1.4);
 }
 
 .marker-clicked {
