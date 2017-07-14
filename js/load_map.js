@@ -40,6 +40,9 @@ function add_posts_to_map(post_locations, map) {
     map.on('click', function (e) {
       var popUps = document.getElementsByClassName('mapboxgl-popup');
       if (popUps[0]) popUps[0].remove();
+
+      // Change marker styles back to inactive marker
+      deactivateMarkers();
     });
 
     post_locations.features.forEach(function(marker, i) {
@@ -62,6 +65,11 @@ function add_posts_to_map(post_locations, map) {
           .addTo(map);
 
       el.addEventListener('click', function(e) {
+        
+          // change marker image for clicked marker
+          deactivateMarkers();
+          activateMarker(this);
+
           flyToMarker(marker);
           createPopUp(marker);
           // Make sure the map is updated and the popup is rendered
@@ -87,6 +95,24 @@ function add_posts_to_map(post_locations, map) {
           maxZoom: 10
       }); 
     }
+}
+
+function activateMarker(markerElement) {
+  markerElement.style.left = '-20px';
+  markerElement.style.top = '-20px';
+  var inner_div = markerElement.getElementsByClassName('marker-inner');
+  if (inner_div[0]) inner_div[0].className = inner_div[0].className.replace( /(?:^|\s)marker-inner(?!\S)/g , 'marker-clicked' );
+}
+
+function deactivateMarkers() {
+  var active_markers = document.getElementsByClassName('marker-clicked');
+  for (i = 0; i < active_markers.length; i++) {
+    var markerDiv = active_markers[i].parentNode;
+    markerDiv.style.left = '-14px';
+    markerDiv.style.top = '-14px';
+    active_markers[i].className = active_markers[i].className.replace
+      ( /(?:^|\s)marker-clicked(?!\S)/g , 'marker-inner' );
+  }    
 }
 
 function flyToMarker(currentFeature) {

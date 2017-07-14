@@ -26,6 +26,14 @@
   -webkit-transform: scale(1.4);
 }
 
+.marker-clicked {
+  float: left;
+  height: 39px;
+  width: 39px;
+  background-size: contain;
+  background-image: url(../images/post_marker_round_colored.png);
+}
+
 .clearfix { display:block; }
 .clearfix:after {
   content:'.';
