@@ -6,22 +6,24 @@
   left:0;
 }
 
-/*.heading {
-  background:#fff;
-  border-bottom:1px solid #eee;
-  min-height:60px;
-  line-height:60px;
-  padding:0 10px;
-}*/
-
 .marker {
   border: none;
   cursor: pointer;
-  height: 206px;
-  width: 150px;
-  background-image: url(../images/post_marker.png);
-  background-color: rgba(0, 0, 0, 0);
-  transform: translate(28px, 56px, 0);
+  display: inline-block;
+  transform: translate(28px, 28px, 0);
+}
+
+.marker-inner {
+  float: left;
+  height: 28px;
+  width: 28px;
+  background-size: contain;
+  background-image: url(../images/post_marker_round_gray.png);
+  -webkit-transition: -webkit-transform .2s ease-in-out;
+}
+
+.marker-inner:hover {
+  -webkit-transform: scale(1.4);
 }
 
 .clearfix { display:block; }
@@ -63,10 +65,6 @@
   margin: 0;
 }
 
-/*.mapboxgl-popup-content div {
-  position: relative;
-}*/
-
 .map-popup-content {
   overflow: hidden; 
   background-size: cover; 
@@ -96,13 +94,6 @@
   color: #ffffff; 
   font-family: Roboto Slab;
 }
-
-/*.popup-background-image {
-  position: absolute;
-  background-size: contain;
-  opacity: 0.4;
-  height: 90px;
-}*/
 
 .mapboxgl-container .leaflet-marker-icon { 
   cursor:pointer; 

@@ -50,8 +50,12 @@ function add_posts_to_map(post_locations, map) {
       el.className = 'marker';
       // By default the image for your custom marker will be anchored
       // by its top left corner. Adjust the position accordingly
-      el.style.left = '-21px';
-      el.style.top = '-46px';
+      el.style.left = '-14px';
+      el.style.top = '-14px';
+      
+      var inner_el = document.createElement('div');
+      inner_el.className = "marker-inner";
+      el.appendChild(inner_el);
       // Create the custom markers, set their position, and add to map
       newmarker = new mapboxgl.Marker(el)
           .setLngLat([parseFloat(marker.geometry.coordinates[0]), parseFloat(marker.geometry.coordinates[1])])
