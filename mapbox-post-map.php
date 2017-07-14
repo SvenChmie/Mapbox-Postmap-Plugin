@@ -6,7 +6,7 @@
  * Version: 0.2.0
  * Author: Sven Chmielewski
  * Author URI: http://www.gobigemma.com
- * License: GPL2
+ * License: GPL3
  */
 
 // for debugging
@@ -61,6 +61,11 @@ class MapboxPostMap {
 		if($post_query->have_posts() ) {
 		    while($post_query->have_posts() ) {
 		        $post_query->the_post(); 
+
+		        // Check if post is published, skip if not
+		        if (get_post_status() != 'publish') {
+		        	continue;
+		        }
 
 		        // If country is set, get the tag to check if we care about this post
 		        if ((!$mb_country) or (($mb_country) and (has_tag($mb_country)))) {
