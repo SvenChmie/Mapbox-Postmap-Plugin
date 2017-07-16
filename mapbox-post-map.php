@@ -12,30 +12,12 @@
 // for debugging
 include 'ChromePhp.php';
 
-class MapboxPostMap {
+class MapboxPostMapBase {
 	function __construct() {
-		add_action('wp_enqueue_scripts', array($this, 'enqueue_mb_scripts'));
-		add_action('wp_enqueue_scripts', array($this, 'enqueue_map_styles'), 20);
-		add_action('wp_ajax_nopriv_mb_get_post_locations', array($this, 'mb_get_post_locations'));
-		add_action('wp_ajax_mb_get_post_locations', array($this, 'mb_get_post_locations'));
-		add_shortcode( 'post_map', array($this, 'shortcode_post_map'));
+		// nothinng to see here
 	}
 
-	function enqueue_map_styles() {
-		if (! is_single() and ! is_page())
-			return;
-		wp_enqueue_style('mapbox-style', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.css');
-		wp_enqueue_style('mb-style', plugin_dir_url(__FILE__) . '/css/map.css', array('mapbox-style'));
-	}
-
-	function enqueue_mb_scripts() {
-		if (! is_single() and ! is_page())
-			return;
-		wp_register_script('mapbox-gl-js', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.js');
-		wp_register_script('mb-script', plugin_dir_url(__FILE__) . '/js/load_map.js', array('jquery'), '1.0', true);
-	}
-
-	function mb_get_post_locations() {
+	function get_post_locations() {
 		// Check nonce
 		if( ! wp_verify_nonce( $_REQUEST['nonce'], 'mb_create_map' ) ){
         	wp_send_json_error();
@@ -124,26 +106,90 @@ class MapboxPostMap {
 		        }
 		    }
 		}
-
 		// Convert output data to JSON and return
 		wp_send_json($geojson_output_data);
+	}
+
+	function enqueue_styles() {
+		if (! is_single() and ! is_page())
+			return;
+		wp_enqueue_style('mapbox-style', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.css');
+		wp_enqueue_style('mb-style', plugin_dir_url(__FILE__) . '/css/map.css', array('mapbox-style'));
+	}
+
+	function register_scripts() {
+		if (! is_single() and ! is_page())
+			return;
+		wp_register_script('mapbox-gl-js', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.js');
+		wp_register_script('mb-script', plugin_dir_url(__FILE__) . '/js/load_map.js', array('jquery'), '1.0', true);
+	}
+		
+	function register_ajax_callback() {
+		add_action('wp_ajax_nopriv_mb_get_post_locations', array($this, 'get_post_locations'));
+		add_action('wp_ajax_mb_get_post_locations', array($this, 'get_post_locations'));
+	}
+
+	function enqueue_scripts($country = "") {
+		wp_enqueue_script('mapbox-gl-js');
+		wp_enqueue_script('mb-script');
+		wp_localize_script( 'mb-script', 'postmap', array(
+			'ajax_url' => admin_url( 'admin-ajax.php' ), 
+			'country' => $country,
+			'nonce' => wp_create_nonce('mb_create_map'),
+		));
+	}
+}
+
+class MapboxPostMap extends MapboxPostMapBase {
+	function __construct() {
+		add_action('wp_enqueue_scripts', array($this, 'register_scripts'));
+		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'), 20);
+		$this->register_ajax_callback();
+		add_shortcode( 'post_map', array($this, 'shortcode_post_map'));
 	}
 
 	function shortcode_post_map( $atts ){
 		// Get optional country name from shortcode 
 		$atts = shortcode_atts( array('country' => ''), $atts, 'post_map' );
 
-		// Enqueue map scripts
-		wp_enqueue_script('mapbox-gl-js');
-		wp_enqueue_script('mb-script');
-		wp_localize_script( 'mb-script', 'postmap', array(
-			'ajax_url' => admin_url( 'admin-ajax.php' ), 
-			'country' => $atts['country'],
-			'nonce' => wp_create_nonce('mb_create_map'),
-		));
-
+		$this->enqueue_scripts($atts['country']);
 		return "<div id='map' class='map mapboxgl-map'></div>";
 	}
 }
 
+class MapboxMetaBox extends MapboxPostMapBase {
+	// TODO: add hidden field with nonce in the callback!
+	private static $metabox = array(
+		'id' => 'mapbox-metabox-1',
+		'title' => 'Post Location',
+		'page' => 'post',
+		'context' => 'normal',
+		'priority' => 'high');
+
+	function __construct() {
+		add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
+		add_action('admin_menu', array($this, 'add_map_meta_box'));
+	}
+
+	function enqueue_admin_scripts($hook) {
+		if( $hook != 'edit.php' && $hook != 'post.php' && $hook != 'post-new.php' ) 
+			return;
+		wp_enqueue_style('mapbox-style', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.css');
+		wp_enqueue_style('mb-style', plugin_dir_url(__FILE__) . '/css/map.css', array('mapbox-style'));
+		wp_register_script('mapbox-gl-js', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.js');
+		wp_register_script('mb-script', plugin_dir_url(__FILE__) . '/js/load_map.js', array('jquery'), '1.0', true);
+		$this->enqueue_scripts();
+	}
+
+	function add_map_meta_box() {
+		add_meta_box(self::$metabox['id'], self::$metabox['title'], array($this, meta_box_callback), self::$metabox['page'], self::$metabox['context'], self::$metabox['priority']);
+	}
+
+	function meta_box_callback() {
+		echo "<div id='map' class='map mapboxgl-map'></div>";
+	}
+}
+
+// TODO: add checks if we are on the right page?
 $map = new MapboxPostMap();
+$metabox = new MapboxMetaBox();
