@@ -1,4 +1,4 @@
-function createMap(is_interactive, location_field_id) {
+function createMap(isInteractive, locationFieldId) {
   // Tell Mapbox that we're allowed to access it
   mapboxgl.accessToken = 'pk.eyJ1IjoiZ29iaWdlbW1hIiwiYSI6ImNpeWoxNHAxYzA1Y3AzMm12dXZ4NjAxMzYifQ.uHWQ11XpdfCnQNI-vDYkew';
 
@@ -18,15 +18,15 @@ function createMap(is_interactive, location_field_id) {
     // Change marker styles back to inactive marker
     deactivateMarkers();
     // If this map is interactive and no popup has been closed, create marker in clicked location
-    if (!removePopUp() && is_interactive) {
+    if (!removePopUp() && isInteractive) {
       updateInteractiveMarker(map, e.lngLat);
-      updateLocationField(location_field_id, e.lngLat);
+      updateLocationField(locationFieldId, e.lngLat);
     }
   });
   return map;
 }
 
-function get_post_locations(map, ajax_url, country, nonce) {
+function getPostLocations(map, ajax_url, country, nonce) {
   // Create the AJAX request to obtain the post data
   jQuery.ajax({
     url : ajax_url,
@@ -37,21 +37,21 @@ function get_post_locations(map, ajax_url, country, nonce) {
       nonce : nonce,
     },
     success : function( response ) {
-      add_posts_to_map(response, map);
+      addPostsToMap(response, map);
     }
   });
 }
 
-function add_posts_to_map(post_locations, map) {
+function addPostsToMap(postLocations, map) {
   // Add the post data to our map
   map.on('load', function (e) {
     map.addSource('places', {
       type: 'geojson',
-      data: post_locations
+      data: postLocations
     });
   });
 
-  post_locations.features.forEach(function(marker, i) {
+  postLocations.features.forEach(function(marker, i) {
     // Create a div element for the marker
     var el = document.createElement('div');
     // Add a class called 'marker' to each div
@@ -62,11 +62,11 @@ function add_posts_to_map(post_locations, map) {
     el.style.left = '-14px';
     el.style.top = '-14px';
     
-    var inner_el = document.createElement('div');
-    inner_el.className = "marker-inner";
-    el.appendChild(inner_el);
+    var innerEl = document.createElement('div');
+    innerEl.className = "marker-inner";
+    el.appendChild(innerEl);
     // Create the custom markers, set their position, and add to map
-    newmarker = new mapboxgl.Marker(el)
+    newMarker = new mapboxgl.Marker(el)
         .setLngLat([parseFloat(marker.geometry.coordinates[0]), parseFloat(marker.geometry.coordinates[1])])
         .addTo(map);
 
@@ -88,8 +88,8 @@ function add_posts_to_map(post_locations, map) {
 
   // Make map fit bounds of all markers on it
   var coordinates = [];
-  for (var i = 0; i < post_locations.features.length; i++) {
-    coordinates.push(post_locations.features[i].geometry.coordinates)
+  for (var i = 0; i < postLocations.features.length; i++) {
+    coordinates.push(postLocations.features[i].geometry.coordinates)
   };
   if (coordinates.length > 0) {
     var bounds = coordinates.reduce(function(bounds, coord) {
@@ -110,12 +110,12 @@ function activateMarker(markerElement) {
 }
 
 function deactivateMarkers() {
-  var active_markers = document.getElementsByClassName('marker-clicked');
-  for (i = 0; i < active_markers.length; i++) {
-    var markerDiv = active_markers[i].parentNode;
+  var activeMarkers = document.getElementsByClassName('marker-clicked');
+  for (i = 0; i < activeMarkers.length; i++) {
+    var markerDiv = activeMarkers[i].parentNode;
     markerDiv.style.left = '-14px';
     markerDiv.style.top = '-14px';
-    active_markers[i].className = active_markers[i].className.replace
+    activeMarkers[i].className = activeMarkers[i].className.replace
       ( /(?:^|\s)marker-clicked(?!\S)/g , 'marker-inner' );
   }    
 }
@@ -149,30 +149,30 @@ function removePopUp() {
 }
 
 function createInteractiveMarker(map, lngLat) {
-  var interactive_marker_div = document.createElement('div');
-  interactive_marker_div.id = "interactive-marker-1";
-  interactive_marker_div.className = 'interactive-marker';
-  interactive_marker = new mapboxgl.Marker(interactive_marker_div)
+  var interactiveMarkerDiv = document.createElement('div');
+  interactiveMarkerDiv.id = "interactive-marker-1";
+  interactiveMarkerDiv.className = 'interactive-marker';
+  interactiveMarker = new mapboxgl.Marker(interactiveMarkerDiv)
       .setLngLat(lngLat)
       .addTo(map);
 }
 
 function updateInteractiveMarker(map, lngLat) {
-  if (typeof interactive_marker == "undefined" ){
+  if (typeof interactiveMarker == "undefined" ){
     createInteractiveMarker(map, lngLat);
   } else {
-    interactive_marker.setLngLat(lngLat);
+    interactiveMarker.setLngLat(lngLat);
   }
 }
 
 function removeInteractiveMarker() {
-  interactive_marker.remove();
-  interactive_marker = void 0; // this is supposed to be an idiomatic way to reset the marker var to undefined. See https://stackoverflow.com/questions/5795936/how-to-set-a-javascript-var-as-undefined/24748543#24748543
+  interactiveMarker.remove();
+  interactiveMarker = void 0; // this is supposed to be an idiomatic way to reset the marker var to undefined. See https://stackoverflow.com/questions/5795936/how-to-set-a-javascript-var-as-undefined/24748543#24748543
 }
 
-function updateLocationField(location_field_id, lngLat) {
-  var location_field = document.getElementById(location_field_id);
-  if (location_field) {
-    location_field.value = String(lngLat.lat) + ", " + String(lngLat.lng);
+function updateLocationField(locationFieldId, lngLat) {
+  var locationField = document.getElementById(locationFieldId);
+  if (locationField) {
+    locationField.value = String(lngLat.lat) + ", " + String(lngLat.lng);
   }
 }
