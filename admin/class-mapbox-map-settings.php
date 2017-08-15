@@ -2,10 +2,16 @@
 
 // TODO: Create some parent structure for admin-side classes/functionality where the script enqueues etc. can live.
 
-class Mapbox_Map_Settings {
+require_once plugin_dir_path(__FILE__) . '../includes/class-mapbox-post-map-base.php';
+
+class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
 	public function __construct () {
 		add_action('admin_menu', array($this, 'add_menu_entry'));
     	add_filter("plugin_action_links_" . plugin_basename( __FILE__ ), array( $this, 'add_settings_link'));
+	}
+
+	function enqueue_admin_scripts($hook) {
+		// enqueue the marker table and load_map script here.
 	}
 
 	public function add_settings_link($links) {
@@ -25,7 +31,7 @@ class Mapbox_Map_Settings {
             }
         // display the settings here (or include file that does)
         ?>
-        <div>Hello World!</div>
+        <div class='marker-table' id='markr-table'></div>
         <?php
         }
 }
