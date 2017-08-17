@@ -1,9 +1,11 @@
 var postdata = [1, 2, 3, 4, 5];
 
 function populateMarkerTable() {
+	console.log("In populateMarkerTable()");
 	var table = document.getElementById('marker-table');
 	if (!table)
 		return;
+	console.log("Found table div!");
 
 	for (i = 0; i < postdata.length; i++) {
 		var row = table.insertRow(i);
