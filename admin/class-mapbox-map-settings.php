@@ -6,12 +6,14 @@ require_once plugin_dir_path(__FILE__) . '../includes/class-mapbox-post-map-base
 
 class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
 	public function __construct () {
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
 		add_action('admin_menu', array($this, 'add_menu_entry'));
     	add_filter("plugin_action_links_" . plugin_basename( __FILE__ ), array( $this, 'add_settings_link'));
 	}
 
 	function enqueue_admin_scripts($hook) {
 		// enqueue the marker table and load_map script here.
+		// TODO: check if we're in the right context.
 		wp_enqueue_script("mb-settings-data", plugin_dir_url(__FILE__) . 'admin/js/marker_table.js');
 		wp_enqueue_script("mb-load-settings", plugin_dir_url(__FILE__) . 'admin/js/load_settings_page.js', array('mb-settings-data'), '1.0');
 	}

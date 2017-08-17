@@ -1,5 +1,7 @@
 <?php
 
+// Note: This is the future base class for all interactive maps (currently in metaboxes and in the settings). As of now, this doesn't do anything (I think...).
+
 require_once plugin_dir_path(__FILE__) . '../includes/class-mapbox-post-map-base.php';
 
 abstract class Mapbox_Interactive_Map extends Mapbox_Post_Map_Base {
