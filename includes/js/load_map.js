@@ -44,9 +44,12 @@ function getPostLocations(ajax_url, country, nonce) {
     },
     success : function( response ) {
       ajaxResponse = response;
+      console.log("Success!");
+      console.log(ajaxResponse);
       // addPostsToMap(response, map);
     }
   });
+  console.log(ajaxResponse);
   return ajaxResponse;
 }
 
