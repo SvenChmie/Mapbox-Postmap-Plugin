@@ -35,7 +35,9 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
             }
         // display the settings here (or include file that does)
         ?>
-        <div class='marker-table' id='marker-table'></div>
+        <div class='marker-table-wrap' id='marker-table-wrap'>
+        	<table class='marker-table' id='marker-table'></table>
+        </div>
         <?php
         }
 }
