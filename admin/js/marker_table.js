@@ -14,7 +14,7 @@ function populateMarkerTable(markerData) {
 		var locCell = row.insertCell(1);	// marker location
 		var typeCell = row.insertCell(2);	// marker type
 		nameCell.innerHTML = markerData.features[i].properties.postTitle;
-		locCell.innerHTML = "The marker location goes here";
-		typeCell.innerHTML = "The marker type goes here";
+		locCell.innerHTML = markerData.features[i].geometry.coordinates[1] + ", " + markerData.features[i].geometry.coordinates[0];
+		typeCell.innerHTML = "Post";
 	}
 }
