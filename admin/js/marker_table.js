@@ -8,12 +8,12 @@ function populateMarkerTable(markerData) {
 		return;
 	console.log("Found table div!");
 
-	for (i = 0; i < postdata.length; i++) {
+	for (i = 0; i < markerData.length; i++) {
 		var row = table.insertRow(i);
 		var nameCell = row.insertCell(0);	// marker name
 		var locCell = row.insertCell(1);	// marker location
 		var typeCell = row.insertCell(2);	// marker type
-		nameCell.innerHTML = "The marker name goes here";
+		nameCell.innerHTML = markerData[i].properties.postTitle;
 		locCell.innerHTML = "The marker location goes here";
 		typeCell.innerHTML = "The marker type goes here";
 	}
