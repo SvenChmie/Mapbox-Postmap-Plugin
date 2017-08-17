@@ -8,7 +8,8 @@ var interactiveMarker;
 var map = createMap(postmap.is_interactive, postmap.location_field_id);
 
 // Populate the map with static post markers
-getPostLocations(map, postmap.ajax_url, postmap.country, postmap.nonce);
+var postLocations = getPostLocations(postmap.ajax_url, postmap.country, postmap.nonce);
+addPostsToMap(postLocations, map);
 
 // Set the interactive marker for the current post
 var currentPostLocation = convertToLngLat(postmap.post_location);

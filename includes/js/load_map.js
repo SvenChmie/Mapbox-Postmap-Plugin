@@ -26,9 +26,9 @@ function createMap(isInteractive, locationFieldId) {
   return map;
 }
 
-// Change this: don't automatically call addPostsToMap(). Instead, pass a callback as a parameter. 
-// Or maybe there's a better way? Save the data into a global variable?
-function getPostLocations(map, ajax_url, country, nonce) {
+// Get the existing location data for the map
+function getPostLocations(ajax_url, country, nonce) {
+  var ajaxResponse;
   // Create the AJAX request to obtain the post data
   jQuery.ajax({
     url : ajax_url,
@@ -38,10 +38,16 @@ function getPostLocations(map, ajax_url, country, nonce) {
       country : country,
       nonce : nonce,
     },
+    error : function(request, error) {
+      ajaxResponse = {};
+      console.log(error);
+    },
     success : function( response ) {
-      addPostsToMap(response, map);
+      ajaxResponse = response;
+      // addPostsToMap(response, map);
     }
   });
+  return ajaxResponse;
 }
 
 function addPostsToMap(postLocations, map) {

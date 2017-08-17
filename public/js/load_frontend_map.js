@@ -3,4 +3,5 @@
 // for now: create an interactive marker outside the function. Later, put all that in objects!
 var interactiveMarker;	// why does this need to be here?
 var map = createMap(postmap.is_interactive, '');
-getPostLocations(map, postmap.ajax_url, postmap.country, postmap.nonce);
+var postLocations = getPostLocations(postmap.ajax_url, postmap.country, postmap.nonce);
+addPostsToMap(postLocations, map);

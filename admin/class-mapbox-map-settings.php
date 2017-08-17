@@ -5,6 +5,8 @@
 require_once plugin_dir_path(__FILE__) . '../includes/class-mapbox-post-map-base.php';
 
 class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
+	private $script_alias = 'mb-load-settings';
+
 	public function __construct () {
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
 		add_action('admin_menu', array($this, 'add_menu_entry'));
@@ -15,8 +17,16 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
 		// enqueue the marker table and load_map script here.
 		// TODO: check if we're in the right context.
 		wp_enqueue_script("mb-settings-data", plugin_dir_url(__FILE__) . 'js/marker_table.js');
-		wp_enqueue_script("mb-load-settings", plugin_dir_url(__FILE__) . 'js/load_settings_page.js', array('mb-settings-data'), '1.0', true);
+		wp_enqueue_script($this->script_alias, plugin_dir_url(__FILE__) . 'js/load_settings_page.js', array('mb-settings-data'), '1.0', true);
+		$this->localize_ajax_script();
 	}
+
+	function localize_ajax_script() {
+        wp_localize_script($this->script_alias, 'postmap', array(
+            'ajax_url' => admin_url( 'admin-ajax.php' ),
+            'nonce' => wp_create_nonce('mb_create_map'),
+        ));
+    }
 
 	public function add_settings_link($links) {
 		$settings_link = '<a href="options-general.php?page=simple-author-box-options">Settings</a>';

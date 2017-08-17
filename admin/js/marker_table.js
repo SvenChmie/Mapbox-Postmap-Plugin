@@ -1,7 +1,8 @@
 var postdata = [1, 2, 3, 4, 5];
 
-function populateMarkerTable() {
+function populateMarkerTable(markerData) {
 	console.log("In populateMarkerTable()");
+	console.log(markerData);
 	var table = document.getElementById('marker-table');
 	if (!table)
 		return;

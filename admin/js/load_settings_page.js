@@ -1,3 +1,4 @@
 // populate the marker table
 console.log("Running load_settings_page.js!");
-populateMarkerTable();
+var markerData = getPostLocations(postmap.ajax_url, "", postmap.nonce);
+populateMarkerTable(markerData);
