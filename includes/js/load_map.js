@@ -27,8 +27,7 @@ function createMap(isInteractive, locationFieldId) {
 }
 
 // Get the existing location data for the map
-function getPostLocations(ajax_url, country, nonce) {
-  var ajaxResponse;
+function getPostLocations(ajax_success_callback, ajax_url, country, nonce) {
   // Create the AJAX request to obtain the post data
   jQuery.ajax({
     url : ajax_url,
@@ -39,18 +38,10 @@ function getPostLocations(ajax_url, country, nonce) {
       nonce : nonce,
     },
     error : function(request, error) {
-      ajaxResponse = {};
       console.log(error);
     },
-    success : function( response ) {
-      ajaxResponse = response;
-      console.log("Success!");
-      console.log(ajaxResponse);
-      // addPostsToMap(response, map);
-    }
+    success : ajax_success_callback
   });
-  console.log(ajaxResponse);
-  return ajaxResponse;
 }
 
 function addPostsToMap(postLocations, map) {

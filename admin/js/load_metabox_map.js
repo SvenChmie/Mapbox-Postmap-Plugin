@@ -8,8 +8,7 @@ var interactiveMarker;
 var map = createMap(postmap.is_interactive, postmap.location_field_id);
 
 // Populate the map with static post markers
-var postLocations = getPostLocations(postmap.ajax_url, postmap.country, postmap.nonce);
-addPostsToMap(postLocations, map);
+getPostLocations(metaboxAjaxSuccessCallback, postmap.ajax_url, postmap.country, postmap.nonce);
 
 // Set the interactive marker for the current post
 var currentPostLocation = convertToLngLat(postmap.post_location);
@@ -38,6 +37,10 @@ if (locationButtonElement) {
 		locationFieldElement.value = '';
 		removeInteractiveMarker();
 	});
+}
+
+function metaboxAjaxSuccessCallback(response) {
+	addPostsToMap(response, map);
 }
 
 function convertToLngLat(inputStr) {
