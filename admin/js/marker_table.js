@@ -1,15 +1,19 @@
-var postdata = [1, 2, 3, 4, 5];
-
 function populateMarkerTable(markerData) {
-	console.log("In populateMarkerTable()");
-	console.log(markerData);
 	var table = document.getElementById('marker-table');
 	if (!table)
 		return;
-	console.log("Found table div!");
+
+	var header = table.createTHead();
+	var headerRow = header.insertRow(0);
+	var nameHeader = headerRow.insertCell(0);
+	var locHeader = headerRow.insertCell(1);
+	var typeHeader = headerRow.insertCell(2);
+	nameHeader.innerHTML = "<b>Marker Title</b>";
+	locHeader.innerHTML = "<b>Location (Lat,  Lng)</b>";
+	typeHeader.innerHTML = "<b>Marker Type</b>";
 
 	for (i = 0; i < markerData.features.length; i++) {
-		var row = table.insertRow(i);
+		var row = table.insertRow(i+1);
 		var nameCell = row.insertCell(0);	// marker name
 		var locCell = row.insertCell(1);	// marker location
 		var typeCell = row.insertCell(2);	// marker type
