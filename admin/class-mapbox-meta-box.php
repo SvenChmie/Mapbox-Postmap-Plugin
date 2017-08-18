@@ -27,7 +27,7 @@ class Mapbox_Meta_Box extends Mapbox_Post_Map_Base {
         wp_enqueue_style('mapbox-style', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.css');
         wp_enqueue_style('mb-style', plugin_dir_url(__FILE__) . '../css/map.css', array('mapbox-style'));
         wp_register_script('mapbox-gl-js', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.js');
-        wp_register_script('mb-load-map', plugin_dir_url(__FILE__) . '../includes/js/load_map.js', array('jquery'), '1.0', true);
+        wp_register_script('mb-load-map', plugin_dir_url(__FILE__) . '../includes/js/load_map.js', array('jquery', 'mapbox-gl-js'), '1.0', true);
         wp_enqueue_script("mb-interactive-map", plugin_dir_url(__FILE__) . 'js/interactive_map.js');
         wp_register_script($this->map_script_alias, plugin_dir_url(__FILE__) . 'js/load_metabox_map.js', array('jquery', 'mb-load-map', 'mb-interactive-map'), '1.0', true);
         $this->enqueue_scripts($this->map_script_alias, "", true);
