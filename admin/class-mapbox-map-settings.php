@@ -24,7 +24,8 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
 		// TODO: check if we're in the right context.
 		wp_enqueue_script('mb-load-map', plugin_dir_url(__FILE__) . '../includes/js/load_map.js', array('jquery'), '1.0', true);		
 		wp_enqueue_script("mb-settings-data", plugin_dir_url(__FILE__) . 'js/marker_table.js');
-		wp_enqueue_script($this->script_alias, plugin_dir_url(__FILE__) . 'js/load_settings_page.js', array('mb-settings-data', 'mb-load-map'), '1.0', true);
+		wp_enqueue_script("mb-interactive-map", plugin_dir_url(__FILE__) . 'js/interactive_map.js');
+		wp_enqueue_script($this->script_alias, plugin_dir_url(__FILE__) . 'js/load_settings_page.js', array('mb-load-map', 'mb-settings-data', 'mb-interactive-map'), '1.0', true);
 		$this->localize_ajax_script();
 	}
 
