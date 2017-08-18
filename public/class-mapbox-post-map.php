@@ -6,6 +6,7 @@ class Mapbox_Post_Map extends Mapbox_Post_Map_Base {
     private $map_script_alias = 'mb-script';
 
     function __construct() {
+        // This constructor register the AJAX callback for the entire plugin, which is... not correct. Should be done somewhere else..
         add_action('wp_enqueue_scripts', array($this, 'register_scripts'));
         add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'), 20);
         $this->register_ajax_callback();
@@ -36,11 +37,12 @@ class Mapbox_Post_Map extends Mapbox_Post_Map_Base {
     }
 
     function localize_ajax_script($map_script_alias, $country, $is_interactive) {
+        $this->create_nonce();
         wp_localize_script($map_script_alias, 'postmap', array(
             'ajax_url' => admin_url( 'admin-ajax.php' ), 
             'country' => $country,
             'is_interactive' => (bool) $is_interactive,
-            'nonce' => wp_create_nonce('mb_create_map'),
+            'nonce' => $this->create_map_nonce,
         ));
     }
 

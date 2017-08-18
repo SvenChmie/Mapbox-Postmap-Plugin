@@ -6,11 +6,17 @@ require_once plugin_dir_path(__FILE__) . '../includes/class-mapbox-post-map-base
 
 class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
 	private $script_alias = 'mb-load-settings';
+	private $name_field_id = "new_marker_name_field";
+    private $location_field_id = "new_marker_coords_field";
+    private $type_select_id = "new_marker_type_select";
+    private $clear_button_id = "new_marker_clear_button";
+    private $save_button_id = "new_marker_save_button";
 
 	public function __construct () {
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
 		add_action('admin_menu', array($this, 'add_menu_entry'));
     	add_filter("plugin_action_links_" . plugin_basename( __FILE__ ), array( $this, 'add_settings_link'));
+    	$this->register_marker_save_ajax_callback();
 	}
 
 	function enqueue_admin_scripts($hook) {
@@ -26,6 +32,11 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
         wp_localize_script($this->script_alias, 'postmap', array(
             'ajax_url' => admin_url( 'admin-ajax.php' ),
             'nonce' => wp_create_nonce('mb_create_map'),
+            'name_field_id' => $this->name_field_id,
+            'location_field_id' => $this->location_field_id,
+            'type_select_id' => $this->type_select_id,
+            'clear_button_id' => $this->clear_button_id,
+            'save_button_id' => $this->save_button_id,
         ));
     }
 
@@ -44,11 +55,42 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
         if( !current_user_can('manage_options') ) {
                 wp_die('You do not have sufficient permissions to access this page.');
             }
-        // display the settings here (or include file that does)
         ?>
+        <div id='map' class='map mapboxgl-map'></div>
+        <div>
+            <p>
+                <label for='<?php echo $this->name_field_id; ?>' class='name_text_label'>Marker Name:</label>
+                <input type='text' name='<?php echo $this->name_field_id; ?>' id='<?php echo $this->name_field_id; ?>' value="" />
+                <label for='<?php echo $this->location_field_id; ?>' class='coord-text-label'>Coordinates:</label>
+                <input type='text' name='<?php echo $this->location_field_id; ?>' id='<?php echo $this->location_field_id; ?>' value="" />
+                <label for='<?php echo $this->type_select_id; ?>' class='type-text-label'>Marker Type:</label>
+                <select name='<?php echo $this->type_select_id; ?>' id='<?php echo $this->type_select_id; ?>'>
+				  <option value="event">Event</option>
+				  <option value="other">Other</option>
+				</select>
+                <button type="button" class="coord-button" id='<?php echo $this->clear_button_id; ?>'>Clear</button>
+                <button type="button" class="coord-button" id='<?php echo $this->save_button_id; ?>'>Save</button>
+            </p>
+        </div>
         <div class='marker-table-wrap' id='marker-table-wrap'>
         	<table class='marker-table' id='marker-table'></table>
         </div>
         <?php
         }
+
+    function mb_save_new_location_set() {
+    	// Check nonce
+		if( ! wp_verify_nonce( $_REQUEST['nonce'], $this->create_map_nonce_name) ){
+        	wp_send_json_error();
+    	}
+
+		// save data here.
+
+		// Get output data and send it as JSON
+		wp_send_json($this->get_post_locations_from_wp(""));
+    }
+
+    private function register_marker_save_ajax_callback() {
+		add_action('wp_ajax_mb_save_new_location_set', array($this, 'mb_save_new_location_set'));
+	}
 }

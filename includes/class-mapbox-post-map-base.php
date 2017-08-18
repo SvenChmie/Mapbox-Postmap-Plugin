@@ -1,19 +1,19 @@
 <?php
 
 class Mapbox_Post_Map_Base {
+	private $create_map_nonce_name = 'mb_create_map';
+	private $create_map_nonce = null;
+
 	function __construct() {
 		// nothing to see here
 	}
 
-	function get_post_locations() {
-		// Check nonce
-		if( ! wp_verify_nonce( $_REQUEST['nonce'], 'mb_create_map' ) ){
-        	wp_send_json_error();
-    	}
+	function create_nonce() {
+		$this->create_map_nonce = wp_create_nonce($this->create_map_nonce_name);
+	}
 
-		// Get country filter through AJAX
-		$mb_country = $_POST['country'];
 
+	function get_post_locations_from_wp($mb_country) {
 		// Set up output data structure
 		$geojson_output_data = new stdClass();
 		$geojson_output_data->type = "FeatureCollection";
@@ -94,8 +94,20 @@ class Mapbox_Post_Map_Base {
 		        }
 		    }
 		}
-		// Convert output data to JSON and return
-		wp_send_json($geojson_output_data);
+		return $geojson_output_data;
+	}
+
+	function get_post_locations() {
+		// Check nonce
+		if( ! wp_verify_nonce( $_REQUEST['nonce'], $this->create_map_nonce_name) ){
+        	wp_send_json_error();
+    	}
+
+		// Get country filter through AJAX
+		$mb_country = $_POST['country'];
+
+		// Get output data and send it as JSON
+		wp_send_json($this->get_post_locations_from_wp($mb_country));
 	}
 		
 	function register_ajax_callback() {
