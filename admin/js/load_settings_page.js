@@ -48,6 +48,6 @@ function setSaveButtonPressEvent(buttonID, nameFieldID, locationFieldID, typeSel
 			    },
 			    success : ajaxSuccessCallback
 		  });
-		}
+		});
 	}
 }
