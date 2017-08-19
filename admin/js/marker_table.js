@@ -25,7 +25,7 @@ function populateMarkerTable(markerData) {
 		nameCell.innerHTML = markerData.features[i].properties.postTitle;
 		locCell.innerHTML = markerData.features[i].geometry.coordinates[1] + ", " + markerData.features[i].geometry.coordinates[0];
 		typeCell.innerHTML = "Post";
-		tableContent.append(row);
+		tableContent.push(row);
 	}
 
 	if (table.getElementsByTagName('tbody').length < 1)
