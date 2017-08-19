@@ -1,12 +1,10 @@
-// This file contains some JQuery code, but it sure could be a lot more efficient.
-// Fix that one day.
 
 function populateMarkerTable(markerData) {
 	var table = document.getElementById('marker-table');
 	if (!table)
 		return;
 
-	if (table.children('thead').length < 1) {
+	if (table.getElementsByTagName('thead').length < 1) {
 		var header = table.createTHead();
 		var headerRow = header.insertRow(0);
 		var nameHeader = headerRow.insertCell(0);
@@ -30,8 +28,8 @@ function populateMarkerTable(markerData) {
 		tableContent.append(row);
 	}
 
-	if (table.children('tbody').length < 1)
+	if (table.getElementsByTagName('tbody').length < 1)
 		table.appendChild(document.createElement('tbody'));
 
-	table.children('tbody').html(tableContent);
+	table.getElementsByTagName('tbody')[0].innerHTML = tableContent;
 }
