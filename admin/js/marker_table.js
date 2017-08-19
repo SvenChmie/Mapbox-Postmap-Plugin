@@ -15,7 +15,13 @@ function populateMarkerTable(markerData) {
 		typeHeader.innerHTML = "<b>Marker Type</b>";
 	}
 
-	var tableContent;
+	// Get the body element of the table or create it if there is none
+	var tableBodyElements = table.getElementsByTagName('tbody')
+	if (tableBodyElements.length < 1) {
+		var tableBody = document.createElement('tbody');
+		table.appendChild(tableBody);
+	}
+	else var tableBody = tableBodyElements[0];
 
 	for (i = 0; i < markerData.features.length; i++) {
 		var row = document.createElement('tr');
@@ -25,11 +31,6 @@ function populateMarkerTable(markerData) {
 		nameCell.innerHTML = markerData.features[i].properties.postTitle;
 		locCell.innerHTML = markerData.features[i].geometry.coordinates[1] + ", " + markerData.features[i].geometry.coordinates[0];
 		typeCell.innerHTML = "Post";
-		tableContent.push(row);
+		tableBody.appendChild(row);
 	}
-
-	if (table.getElementsByTagName('tbody').length < 1)
-		table.appendChild(document.createElement('tbody'));
-
-	table.getElementsByTagName('tbody')[0].innerHTML = tableContent;
 }
