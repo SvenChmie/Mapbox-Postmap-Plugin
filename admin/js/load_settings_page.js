@@ -21,6 +21,7 @@ getPostLocations(settingsAjaxSuccessCallback, postmap.ajax_url, "", postmap.nonc
 
 function settingsAjaxSuccessCallback(response) {
 	populateMarkerTable(response);
+	addPostsToMap(response, map);
 }
 
 function setSaveButtonPressEvent(buttonID, nameFieldID, locationFieldID, typeSelectID, ajaxUrl, nonce, ajaxSuccessCallback) {
