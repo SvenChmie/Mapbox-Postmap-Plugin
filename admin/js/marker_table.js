@@ -23,6 +23,8 @@ function populateMarkerTable(markerData) {
 	}
 	else var tableBody = tableBodyElements[0];
 
+	if (!markerData) return;
+
 	for (i = 0; i < markerData.features.length; i++) {
 		var row = document.createElement('tr');
 		var nameCell = row.insertCell(0);	// marker name
