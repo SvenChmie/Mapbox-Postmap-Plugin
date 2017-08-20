@@ -95,7 +95,7 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
 		
 		$table_name = $wpdb->prefix . $location_table_name;
 
-		$marker_name, $marker_lat, $marker_lng, $marker_type = '';
+		$marker_name, $marker_lat, $marker_lng, $marker_type;
 
 		if ( isset( $_POST['markerName'] ) && ! empty( $_POST['markerName'] ) {
 			$marker_name = sanitize_text_field($_POST['markerName']);
