@@ -35,14 +35,16 @@ function setSaveButtonPressEvent(buttonID, nameFieldID, locationFieldID, typeSel
 				alert("Please fill out all fields.");
 				return;
 			}
-			var dataString = 'marker_name=' + markerName + '&marker_location=' + markerLocation + '&marker_type=' + markerType;
+			// var dataString = 'marker_name=' + markerName + '&marker_location=' + markerLocation + '&marker_type=' + markerType;
 			jQuery.ajax({
 			    url : ajaxUrl,
 			    type : 'post',
 			    data : {
 			      action : 'mb_save_new_location_set',
 			      nonce : nonce,
-			      data: dataString
+			      markerName : markerName,
+			      markerLocation : markerLocation,
+			      markerType : markerType
 			    },
 			    error : function(request, error) {
 			      console.log(error);

@@ -15,6 +15,9 @@ include 'ChromePhp.php';
 global $mb_db_version;
 $mb_db_version = '1.0';
 
+global $location_table_name;
+$location_table_name = 'mb_locdata';
+
 
 /**
  * Code that runs when the plugin is activated.
@@ -23,12 +26,13 @@ $mb_db_version = '1.0';
 function activate_mapbox_post_map() {
     global $wpdb;
     global $mb_db_version;
+    global $location_table_name;
     $installed_version = get_option('mb_db_version');
 
     if ( $installed_version !== $booking_db_version ) {
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
-        $table_name = $wpdb->prefix . 'mb_locdata';
+        $table_name = $wpdb->prefix . $location_table_name;
         $charset_collate = $wpdb->get_charset_collate();
 
         $sql = "CREATE TABLE $table_name (

@@ -84,13 +84,51 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
 
     function mb_save_new_location_set() {
     	// Check nonce
+    	// TODO: give this call its own nonce!
 		if( ! wp_verify_nonce( $_REQUEST['nonce'], $this->create_map_nonce_name) ){
         	wp_send_json_error();
+        	return;
     	}
 
-		// save data here.
+		global $wpdb;
+		global $location_table_name;
+		
+		$table_name = $wpdb->prefix . $location_table_name;
 
-		// Get output data and send it as JSON
+		$marker_name, $marker_lat, $marker_lng, $marker_type = '';
+
+		if ( isset( $_POST['markerName'] ) && ! empty( $_POST['markerName'] ) {
+			$marker_name = sanitize_text_field($_POST['markerName']);
+		}
+		
+		if ( isset( $_POST['markerLocation'] ) && ! empty( $_POST['markerLocation'] ) {
+			$marker_location = explode(',', sanitize_text_field($_POST['markerLocation']), 2);
+        if (sizeof($marker_location) == 2) {
+        	$marker_lng = $marker_location[1];
+        	$marker_lat = $marker_location[0];
+        }
+
+		if ( isset( $_POST['markerType'] ) && ! empty( $_POST['markerType'] ) {
+			$marker_type = sanitize_text_field($_POST['markerType']);
+		}
+
+		if (empty($marker_name) || empty($marker_lat) || empty($marker_lng) || empty($marker_type)) {
+			wp_send_json_error();
+			return;
+		}
+
+		// write data to database
+		$wpdb->insert( 
+			$table_name, 
+			array( 
+				'name' => $marker_name, 
+				'loclat' => $marker_lat, 
+				'loclng' => $marker_lng,
+				'type' => $marker_type
+			) 
+		);
+
+		// This needs to change, it only fetches post locations and not event locations (which is the only thing that changes).
 		wp_send_json($this->get_post_locations_from_wp(""));
     }
 
