@@ -1,5 +1,6 @@
 
 function populateMarkerTable(markerData) {
+
 	var table = document.getElementById('marker-table');
 	if (!table)
 		return;
@@ -23,7 +24,7 @@ function populateMarkerTable(markerData) {
 	}
 	else var tableBody = tableBodyElements[0];
 
-	if (!markerData) return;
+	if (!markerData || !markerData.features) return;
 
 	for (i = 0; i < markerData.features.length; i++) {
 		var row = document.createElement('tr');
