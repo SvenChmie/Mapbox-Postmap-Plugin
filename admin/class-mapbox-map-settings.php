@@ -85,6 +85,8 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
     function mb_save_new_location_set() {
     	// Check nonce
     	// TODO: give this call its own nonce!
+    	ChromePhp::log($_POST);
+
 		if( ! wp_verify_nonce( $_REQUEST['nonce'], $this->create_map_nonce_name) ){
         	wp_send_json_error();
         	return;
