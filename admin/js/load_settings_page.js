@@ -5,6 +5,8 @@ console.log("Running load_settings_page.js!");
 
 var interactiveMarker;
 
+console.log(postmap.new_map_nonce);
+
 // Create the map
 var map = createMap(true, postmap.location_field_id);
 setLocationFieldKeyPressEvent(postmap.location_field_id);
