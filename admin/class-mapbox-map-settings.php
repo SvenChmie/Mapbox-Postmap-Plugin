@@ -11,6 +11,7 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
     private $type_select_id = "new_marker_type_select";
     private $clear_button_id = "new_marker_clear_button";
     private $save_button_id = "new_marker_save_button";
+    private $new_marker_nonce;
 
 	public function __construct () {
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
@@ -33,9 +34,10 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
 	}
 
 	function localize_ajax_script() {
+		$this->new_marker_nonce = wp_create_nonce('mb_new_marker');
         wp_localize_script($this->script_alias, 'postmap', array(
             'ajax_url' => admin_url( 'admin-ajax.php' ),
-            'nonce' => wp_create_nonce('mb_create_map'),
+            'nonce' => $this->new_marker_nonce,
             'name_field_id' => $this->name_field_id,
             'location_field_id' => $this->location_field_id,
             'type_select_id' => $this->type_select_id,
@@ -87,7 +89,7 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
     	// TODO: give this call its own nonce!
     	ChromePhp::log($_POST);
 
-		if( ! wp_verify_nonce( $_REQUEST['nonce'], $this->create_map_nonce_name) ){
+		if( ! wp_verify_nonce( $_REQUEST['nonce'], $this->new_marker_nonce) ){
 			ChromePhp::log("Nonce doesn't match!");
 			ChromePhp::log($_REQUEST['nonce']);
 			ChromePhp::log($this->create_map_nonce_name);
