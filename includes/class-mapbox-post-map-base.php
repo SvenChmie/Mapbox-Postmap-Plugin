@@ -11,6 +11,8 @@ class Mapbox_Post_Map_Base {
 	function create_new_map_nonce() {
 		// This nonce is used to verify intent on fetching post location data for map creation. That action is an AJAX call to get_post_locations().
 		$this->new_map_nonce = wp_create_nonce($this->new_map_nonce_name);
+		ChromePhp::log('Created new map nonce');
+		ChromePhp::log($this->new_map_nonce);
 	}
 
 
