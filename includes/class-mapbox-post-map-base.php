@@ -2,7 +2,7 @@
 
 class Mapbox_Post_Map_Base {
 	private $new_map_nonce_name = 'mb_create_map';
-	private $new_map_nonce = null;
+	// private $new_map_nonce = null;
 
 	function __construct() {
 		// nothing to see here

@@ -26,6 +26,8 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
 		// Create nonces
 		$this->new_marker_nonce = wp_create_nonce('mb_new_marker');
 		$this->create_new_map_nonce();
+		ChromePhp::log($this->new_map_nonce);
+
 
 		wp_enqueue_style('mapbox-style', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.css');
         wp_enqueue_style('mb-style', plugin_dir_url(__FILE__) . '../css/map.css', array('mapbox-style'));
