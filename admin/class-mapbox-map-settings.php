@@ -88,6 +88,7 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
     	ChromePhp::log($_POST);
 
 		if( ! wp_verify_nonce( $_REQUEST['nonce'], $this->create_map_nonce_name) ){
+			ChromePhp::log("Nonce doesn't match!");
         	wp_send_json_error();
         	return;
     	}
@@ -116,7 +117,13 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
 			$marker_type = sanitize_text_field($_POST['markerType']);
 		}
 
+		ChromePhp::log($marker_name);
+		ChromePhp::log($marker_lat);
+		ChromePhp::log($marker_lng);
+		ChromePhp::log($marker_type);
+
 		if (empty($marker_name) || empty($marker_lat) || empty($marker_lng) || empty($marker_type)) {
+			ChromePhp::log("Marker vars empty!");
 			wp_send_json_error();
 			return;
 		}
