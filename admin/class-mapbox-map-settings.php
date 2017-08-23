@@ -11,7 +11,6 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
     private $type_select_id = "new_marker_type_select";
     private $clear_button_id = "new_marker_clear_button";
     private $save_button_id = "new_marker_save_button";
-    private $new_marker_nonce;
 
 	public function __construct () {
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
@@ -23,6 +22,11 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
 	function enqueue_admin_scripts($hook) {
 		// enqueue the marker table and load_map script here.
 		// TODO: check if we're in the right context.
+
+		// Create nonces
+		$this->new_marker_nonce = wp_create_nonce('mb_new_marker');
+		$this->create_new_map_nonce();
+
 		wp_enqueue_style('mapbox-style', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.css');
         wp_enqueue_style('mb-style', plugin_dir_url(__FILE__) . '../css/map.css', array('mapbox-style'));
 		wp_enqueue_script('mapbox-gl-js', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.js');
@@ -34,10 +38,10 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
 	}
 
 	function localize_ajax_script() {
-		$this->new_marker_nonce = wp_create_nonce('mb_new_marker');
         wp_localize_script($this->script_alias, 'postmap', array(
             'ajax_url' => admin_url( 'admin-ajax.php' ),
-            'nonce' => $this->new_marker_nonce,
+            'new_marker_nonce' => $this->new_marker_nonce,
+            'new_map_nonce' => $this->new_map_nonce,
             'name_field_id' => $this->name_field_id,
             'location_field_id' => $this->location_field_id,
             'type_select_id' => $this->type_select_id,

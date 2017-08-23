@@ -37,12 +37,12 @@ class Mapbox_Post_Map extends Mapbox_Post_Map_Base {
     }
 
     function localize_ajax_script($map_script_alias, $country, $is_interactive) {
-        $this->create_nonce();
+        $this->create_new_map_nonce();
         wp_localize_script($map_script_alias, 'postmap', array(
             'ajax_url' => admin_url( 'admin-ajax.php' ), 
             'country' => $country,
             'is_interactive' => (bool) $is_interactive,
-            'nonce' => $this->create_map_nonce,
+            'new_map_nonce' => $this->new_map_nonce,
         ));
     }
 

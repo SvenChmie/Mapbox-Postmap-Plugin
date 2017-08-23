@@ -14,10 +14,10 @@ setSaveButtonPressEvent(postmap.save_button_id,
 						postmap.location_field_id, 
 						postmap.type_select_id, 
 						postmap.ajax_url, 
-						postmap.nonce, 
+						postmap.new_marker_nonce, 
 						settingsAjaxSuccessCallback);
 
-getPostLocations(settingsAjaxSuccessCallback, postmap.ajax_url, "", postmap.nonce);
+getPostLocations(settingsAjaxSuccessCallback, postmap.ajax_url, "", postmap.new_map_nonce);
 
 function settingsAjaxSuccessCallback(response) {
 	console.log(response);

@@ -1,15 +1,16 @@
 <?php
 
 class Mapbox_Post_Map_Base {
-	private $create_map_nonce_name = 'mb_create_map';
-	private $create_map_nonce = null;
+	private $new_map_nonce_name = 'mb_create_map';
+	private $new_map_nonce = null;
 
 	function __construct() {
 		// nothing to see here
 	}
 
-	function create_nonce() {
-		$this->create_map_nonce = wp_create_nonce($this->create_map_nonce_name);
+	function create_new_map_nonce() {
+		// This nonce is used to verify intent on fetching post location data for map creation. That action is an AJAX call to get_post_locations().
+		$this->new_map_nonce = wp_create_nonce($this->new_map_nonce_name);
 	}
 
 
@@ -99,7 +100,7 @@ class Mapbox_Post_Map_Base {
 
 	function get_post_locations() {
 		// Check nonce
-		if( ! wp_verify_nonce( $_REQUEST['nonce'], $this->create_map_nonce_name) ){
+		if( ! wp_verify_nonce( $_REQUEST['nonce'], $this->new_map_nonce_name) ){
         	wp_send_json_error();
     	}
 
