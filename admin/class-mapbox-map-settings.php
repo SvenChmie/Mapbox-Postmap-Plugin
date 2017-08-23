@@ -11,6 +11,7 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
     private $type_select_id = "new_marker_type_select";
     private $clear_button_id = "new_marker_clear_button";
     private $save_button_id = "new_marker_save_button";
+    private $new_marker_nonce_name = 'mb-new-marker';
 
 	public function __construct () {
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
@@ -24,7 +25,7 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
 		// TODO: check if we're in the right context.
 
 		// Create nonces
-		$this->new_marker_nonce = wp_create_nonce('mb_new_marker');
+		$this->new_marker_nonce = wp_create_nonce($this->new_marker_nonce_name);
 		$this->create_new_map_nonce();
 
 		wp_enqueue_style('mapbox-style', 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.css');
@@ -93,10 +94,10 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
     	// TODO: give this call its own nonce!
     	ChromePhp::log($_POST);
 
-		if( ! wp_verify_nonce( $_REQUEST['nonce'], 'mb-new-marker') ){
+		if( ! wp_verify_nonce( $_REQUEST['nonce'], $this->new_marker_nonce_name) ){
 			ChromePhp::log("Nonce doesn't match!");
 			ChromePhp::log($_REQUEST['nonce']);
-			ChromePhp::log($this->new_marker_nonce);
+			ChromePhp::log($this->new_marker_nonce_name);
         	wp_send_json_error();
         	return;
     	}
