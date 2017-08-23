@@ -89,6 +89,8 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
 
 		if( ! wp_verify_nonce( $_REQUEST['nonce'], $this->create_map_nonce_name) ){
 			ChromePhp::log("Nonce doesn't match!");
+			ChromePhp::log($_REQUEST['nonce']);
+			ChromePhp::log($this->create_map_nonce_name);
         	wp_send_json_error();
         	return;
     	}
