@@ -99,6 +99,9 @@ class Mapbox_Post_Map_Base {
 	}
 
 	function get_post_locations() {
+
+		ChromePhp::log($_REQUEST['nonce']);
+		ChromePhp::log($this->new_map_nonce_name);
 		// Check nonce
 		if( ! wp_verify_nonce( $_REQUEST['nonce'], $this->new_map_nonce_name) ){
         	wp_send_json_error();
