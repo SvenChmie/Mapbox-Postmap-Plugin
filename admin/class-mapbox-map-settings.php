@@ -93,7 +93,7 @@ class Mapbox_Map_Settings extends Mapbox_Post_Map_Base {
     	// TODO: give this call its own nonce!
     	ChromePhp::log($_POST);
 
-		if( ! wp_verify_nonce( $_REQUEST['nonce'], $this->new_marker_nonce) ){
+		if( ! wp_verify_nonce( $_REQUEST['nonce'], 'mb-new-marker') ){
 			ChromePhp::log("Nonce doesn't match!");
 			ChromePhp::log($_REQUEST['nonce']);
 			ChromePhp::log($this->new_marker_nonce);
